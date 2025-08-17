@@ -30,9 +30,9 @@ public class DeliveryCalcTest {
 
     @ParameterizedTest(name = "distance={0} км → надбавка корректна, small, not fragile → ожидаем {1} руб (без коэфф.)")
     @MethodSource(value = "dataForDistTest")
-    void baseSumsByDistance(double distance, int baseSum) {
+    void baseCostByDistance(double distance, int baseSum) {
         var cost = calcDeliveryCost(distance, "small", false, "default");
-        int expected = Math.max(baseSum, 400);
+        var expected = Math.max(baseSum, 400);
         assertEquals(baseSum, DeliveryCalc.getBaseCost());
         // из-за минималки 400 — проверим, что если стоимость доставки < 400, вернётся 400
         assertEquals(expected, cost);
@@ -41,7 +41,7 @@ public class DeliveryCalcTest {
 
     @Test
     @DisplayName("Хрупкий груз на > 30 км → IllegalArgumentException")
-    void fragileOver30Exception() {
+    void fragileOverMaxDistException() {
         IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
                 () -> calcDeliveryCost(30.01, "small", true, "default")
